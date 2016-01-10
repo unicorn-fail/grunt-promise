@@ -1,13 +1,15 @@
 {
   "name": "grunt-promise",
-  "version": "0.0.1",
+  "version": "0.1.6",
   "description": "Allows the registration and execution of promise based grunt tasks.",
-  "homepage": "https://github.com/markcarver/grunt-promise",
+  "homepage": "https://github.com/unicorn-fail/grunt-promise",
   "keywords": [
     "grunt",
-    "q",
     "async",
-    "promise"
+    "bluebird",
+    "q",
+    "promise",
+    "es6"
   ],
   "author": {
     "name": "Mark Carver",
@@ -16,20 +18,16 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/markcarver/grunt-promise.git"
+    "url": "git://github.com/unicorn-fail/grunt-promise.git"
   },
   "bugs": {
-    "url": "https://github.com/markcarver/grunt-promise/issues"
+    "url": "https://github.com/unicorn-fail/grunt-promise/issues"
   },
-  "license": "(GPL-2.0 OR MIT)",
+  "license": "MIT",
   "licenses": [
     {
-      "type": "GPL-2.0",
-      "url": "https://github.com/markcarver/grunt-promise/blob/master/LICENSE-GPL-2.0"
-    },
-    {
       "type": "MIT",
-      "url": "https://github.com/markcarver/grunt-promise/blob/master/LICENSE-MIT"
+      "url": "https://github.com/unicorn-fail/grunt-promise/blob/master/LICENSE"
     }
   ],
   "engines": {
@@ -37,10 +35,12 @@
   },
   "main": "index.js",
   "files": [
-    "index.js"
+    "index.js",
+    "lib",
+    "script"
   ],
   "scripts": {
-    "postinstall": "node script/post-install",
+    "postinstall": "script/post-install.js",
     "test": "grunt test"
   },
   "dependencies": {},
@@ -51,6 +51,7 @@
     "grunt-contrib-jshint": "^0.11.3",
     "grunt-contrib-nodeunit": "^0.4.1",
     "node-promise": "^0.5.12",
+    "nodeunit": "^0.9.1",
     "promise": "^7.1.1",
     "q": "^1.4.1"
   },

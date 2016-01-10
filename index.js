@@ -1,5 +1,8 @@
 /**
- * The "grunt-promise" module.
+ * The "grunt-promise" NPM module.
+ *
+ * The MIT License (MIT)
+ * Copyright (c) 2016 Mark Carver
  *
  * @param grunt
  *   The current grunt instance.
@@ -41,13 +44,15 @@ module.exports = function (grunt, library) {
    * Parses arguments to ensure they can be used for promised based tasks.
    *
    * @param {string} name
-   *   The name of the grunt task to register.
-   * @param {string|Array|function} [info]
-   *   (optional) Descriptive text explaining what the task does. Shows up on
-   *   --help. Or if no info is passes, the fn argument takes this position.
-   * @param {function|Array} [fn]
-   *   (optional) A task function or an array of task names to be ran when
-   *   executed.
+   *   The name of the Grunt task to register.
+   * @param {string|function} [info]
+   *   (Optional) Descriptive text explaining what the task does. Shows up on
+   *   `--help`. You may omit this argument and replace it with `fn` instead.
+   * @param {function} [fn]
+   *   (Required) The task function. Remember not to pass in your Promise
+   *   function directly. Promise resolvers are immediately invoked when they
+   *   are created. You should wrap the Promise with an anonymous task function
+   *   instead.
    *
    * @returns {Array}
    *   An array containing: name, info and a promised fn task.
@@ -58,11 +63,8 @@ module.exports = function (grunt, library) {
       fn = info;
       info = null;
     }
-    if (!fn) {
-      fn = function () {};
-    }
     if (typeof fn !== 'function') {
-      grunt.fail.fatal(new Error('The callback provided must be a function.'));
+      grunt.fail.fatal(new Error('The "fn" argument for grunt.registerPromise or grunt.registerMultiPromise must be a function.'));
     }
     return [name, info, promiseTask(fn)];
   };
@@ -71,13 +73,15 @@ module.exports = function (grunt, library) {
    * Registers a new promise based Grunt task.
    *
    * @param {string} name
-   *   The name of the grunt task to register.
-   * @param {string|Array|function} [info]
-   *   (optional) Descriptive text explaining what the task does. Shows up on
-   *   --help. Or if no info is passes, the fn argument takes this position.
-   * @param {function|Array} [fn]
-   *   (optional) A task function or an array of task names to be ran when
-   *   executed.
+   *   The name of the Grunt task to register.
+   * @param {string|function} [info]
+   *   (Optional) Descriptive text explaining what the task does. Shows up on
+   *   `--help`. You may omit this argument and replace it with `fn` instead.
+   * @param {function} [fn]
+   *   (Required) The task function. Remember not to pass in your Promise
+   *   function directly. Promise resolvers are immediately invoked when they
+   *   are created. You should wrap the Promise with an anonymous task function
+   *   instead.
    *
    * @returns {object}
    *   The task object.
@@ -90,13 +94,15 @@ module.exports = function (grunt, library) {
    * Registers a new promise based Grunt multi-task.
    *
    * @param {string} name
-   *   The name of the grunt task to register.
-   * @param {string|Array|function} [info]
-   *   (optional) Descriptive text explaining what the task does. Shows up on
-   *   --help. Or if no info is passes, the fn argument takes this position.
-   * @param {function|Array} [fn]
-   *   (optional) A task function or an array of task names to be ran when
-   *   executed.
+   *   The name of the Grunt task to register.
+   * @param {string|function} [info]
+   *   (Optional) Descriptive text explaining what the task does. Shows up on
+   *   `--help`. You may omit this argument and replace it with `fn` instead.
+   * @param {function} [fn]
+   *   (Required) The task function. Remember not to pass in your Promise
+   *   function directly. Promise resolvers are immediately invoked when they
+   *   are created. You should wrap the Promise with an anonymous task function
+   *   instead.
    *
    * @returns {object}
    *   The task object.

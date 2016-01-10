@@ -1,8 +1,10 @@
 /**
- * Development gruntfile for the "grunt-promise" plugin.
+ * Development Gruntfile for the "grunt-promise" NPM module.
  *
- * @param grunt
+ * The MIT License (MIT)
+ * Copyright (c) 2016 Mark Carver
  */
+
 module.exports = function (grunt) {
   'use strict';
 
