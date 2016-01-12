@@ -69,6 +69,7 @@ library different from what you're expecting.
      to create a "thenable" Promise object. The methods it checks (in order) are:
      `module.Promise`, `module.defer`, `module.Deferred` and then finally the
      `module` itself.
+
      ```js
      var Promise = require('grunt-promise').load('my-custom-npm-module');
      ```
@@ -76,6 +77,7 @@ library different from what you're expecting.
      returns a either a `string` of an NPM package (module) or a "thenable"
      Promise object. This may be necessary if a NPM package exports the
      "thenable" to a method not in the list above.
+
      ```js
      var Promise = require('grunt-promise').load(function () {
        return require('some-promise-module').SomeOtherMethod;
@@ -83,6 +85,7 @@ library different from what you're expecting.
      ```
 2. Grunt Option - The following option is available where some use cases may
    require a little bit of CLI love. In which case, you can use:
+
    ```shell
    grunt --grunt-promise-library=<module>
    ```
