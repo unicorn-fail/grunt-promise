@@ -37,63 +37,63 @@ below.
 * [q](https://www.npmjs.com/package/q)
 * [promise](https://www.npmjs.com/package/promise)
 * [es6-promise](https://www.npmjs.com/package/es6-promise)
-* [node-promise](https://www.npmjs.com/package/node-promise) (likely to be removed)
 * _native_ - V8 Promise API (node >= 0.12)
 
 ## Usage
 
-Require the plugin's NPM module at the top and pass the `grunt` instance. It will
-return the first available Promise object from the node environment. You can use
+Require the plugin's NPM module at the top and call the `load` method. It will
+load the first available Promise object from the node environment. You can use
 this Promise object to create new Promises, as you will see below.
 
 ```js
 // Gruntfile.js
+var Promise = require('grunt-promise').load();
 module.exports = function (grunt) {
-  var Promise = require('grunt-promise')(grunt);
-
   // Continue your grunt initialization as normal.
   grunt.initConfig({...});
 }
 ```
 
-## Optional - Choose Promise library/object
+## Recommended - Specify a Promise library/object
 
-There are several ways to override which Promise library/object will be returned
-from the plugin:
+There are several ways to override which Promise object will be returned from
+the plugin. It's recommended that you are explicit when loading a Promise object
+to avoid confusion and randomness if/when other packages may depend on a Promise
+library different from what you're expecting.
 
-1. Pass an additional `library` parameter when requiring the plugin. This can
-   parameter can be be `string|function`:
+1. Pass an optional node package name when loading the Promise object. This can
+   either be a `string` or a `function`:
 
-   `string`: You can pass any NPM module name here and it will automatically
-   require the module for you. If it's one of the supported modules, the plugin
-   will automatically return the correct object/method that's needed to create
-   promises.
-   ```js
-   var Promise = require('grunt-promise')(grunt, 'my-custom-npm-module');
-   //                                            ^ Here ----------------
-   ```
-   `function`: In more advanced use cases, you can instead, pass a function that
-   returns a Promise object. This is sometimes necessary in cases where a method
-   on the object needs to be returned instead of the object itself.
-   ```js
-   var Promise = require('grunt-promise')(grunt, function () {
-     return require('my-custom-promise').Promise;
-   });
-   ```
+   * `string`: You can pass any NPM package (module) name here and it will
+     automatically require the module for you and determine which method is used
+     to create a "thenable" Promise object. The methods it checks (in order) are:
+     `module.Promise`, `module.defer`, `module.Deferred` and then finally the
+     `module` itself.
+     ```js
+     var Promise = require('grunt-promise').load('my-custom-npm-module');
+     ```
+   * `function`: In more advanced use cases, pass a function callback that
+     returns a either a `string` of an NPM package (module) or a "thenable"
+     Promise object. This may be necessary if a NPM package exports the
+     "thenable" to a method not in the list above.
+     ```js
+     var Promise = require('grunt-promise').load(function () {
+       return require('some-promise-module').SomeOtherMethod;
+     });
+     ```
 2. Grunt Option - The following option is available where some use cases may
    require a little bit of CLI love. In which case, you can use:
    ```shell
    grunt --grunt-promise-library=<module>
    ```
-   Where `<module>` is an NPM Promise based module. You may also specify
-   `native` here.
+   Where `<module>` is an NPM package module. You may also specify `native` here.
 
 ## Available Grunt Methods
 
 This plugin provides two new methods on the main `grunt` object that help save
 a little bit of time and whitespace. It's worth noting that you do not have to
-call `this.async()` inside these tasks (which is the whole point for this plugin).
-Just make sure that you return a Promise object.
+call `this.async()` inside these tasks (which is the whole point for this
+plugin).
 
 * `grunt.registerPromise(name, info, fn)` - Normal task
 * `grunt.registerMultiPromise(name, info, fn)` - Multi task
@@ -106,19 +106,28 @@ Arguments:
   `fn` instead.
 * `{function} fn` - _(Required)_ The task function. Remember not to pass in your
   Promise function directly. Promise resolvers are immediately invoked when
-  they are created. You should wrap the Promise with an anonymous task function
-  instead.
+  they are created. You must wrap the Promise with an anonymous task function
+  instead. The task function must return a Promise or it will fail.
 
 **Examples:**
 ```js
-module.exports = function (grunt) {
-  var Promise = require('grunt-promise')(grunt);
+var Promise = require('grunt-promise').load();
 
-  // Registers a task for a Promise.
+module.exports = function (grunt) {
+  // Register a promised task (working example).
+  grunt.registerPromise('timeout', function () {
+    return new Promise(function (resolve) {
+      setTimeout(function () {
+        resolve('Hello World!');
+      }, 1000); // 1 second
+    }).then(grunt.log.write);
+  });
+
+  // Register a promised task (workflow example, non-working).
   grunt.registerPromise('my-promise', function () {
-    return myPromise()
-      .then(someAyncFunction)
-      .then(anotherAyncFunction)
+    return somePromise()
+      .then(someAyncPromise)
+      .then(anotherAyncPromise)
       .then(function (value) {
         grunt.log.writeln('Value:', value);
       })
@@ -129,15 +138,6 @@ module.exports = function (grunt) {
          // fail or end the async task.
       })
     ;
-  });
-
-  // Register a task for a new Promise (working example).
-  grunt.registerPromise('timeout', function () {
-    return new Promise(function (resolve) {
-      setTimeout(function () {
-        resolve('Hello World!');
-      }, 1000); // 1 second
-    }).then(grunt.log.write);
   });
 }
 ```

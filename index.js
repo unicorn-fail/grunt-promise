@@ -3,20 +3,16 @@
  *
  * The MIT License (MIT)
  * Copyright (c) 2016 Mark Carver
- *
- * @param grunt
- *   The current grunt instance.
- * @param library
- *   A specific NPM module that implements a promise library. You can also
- *   specify "native" to use the native V8 Promise API in Node.js.
- *
- * @returns {Promise}
  */
-module.exports = function (grunt, library) {
-  'use strict';
+(function (module) {
+  "use strict";
 
-  // Load a proper promise object.
-  var Promise = require('./lib/promise')(grunt).load(library || grunt.option('grunt-promise-library'));
+  var grunt = require('grunt');
+
+  /**
+   * @module module:grunt-promise
+   */
+  var libraries = module.exports = require('./lib/libraries');
 
   /**
    * Wraps a task and then resolves a promised version of it upon execution.
@@ -30,13 +26,15 @@ module.exports = function (grunt, library) {
   var promiseTask = function (fn) {
     return function () {
       var done = this.async();
-      Promise.resolve(fn.apply(this, this.args))
+      var promise = fn.apply(this, this.args);
+      if (!libraries.isThenable(promise)) {
+        grunt.fail.warn('The task "' + this.nameArgs + '" must return a Promise.', grunt.fail.code.TASK_FAILURE);
+      }
+      libraries.load().resolve(promise)
         .catch(function (err) {
           grunt.fail.warn(err, grunt.fail.code.TASK_FAILURE);
-          done(false);
         })
-        .then(done)
-      ;
+        .then(done);
     };
   };
 
@@ -83,12 +81,19 @@ module.exports = function (grunt, library) {
    *   are created. You should wrap the Promise with an anonymous task function
    *   instead.
    *
+   * @memberOf grunt
+   *
    * @returns {object}
    *   The task object.
    */
   grunt.registerPromise = function (name, info, fn) {
-    return grunt.registerTask.apply(grunt, parseArgs(name, info, fn));
+    return grunt.task.registerTask.apply(grunt.task, parseArgs(name, info, fn));
   };
+
+  /**
+   * @memberOf grunt.task
+   */
+  grunt.task.registerPromise = grunt.registerPromise.bind(grunt.task);
 
   /**
    * Registers a new promise based Grunt multi-task.
@@ -104,12 +109,18 @@ module.exports = function (grunt, library) {
    *   are created. You should wrap the Promise with an anonymous task function
    *   instead.
    *
+   * @memberOf grunt
+   *
    * @returns {object}
    *   The task object.
    */
   grunt.registerMultiPromise = function (name, info, fn) {
-    return grunt.registerMultiTask.apply(grunt, parseArgs(name, info, fn));
+    return grunt.task.registerMultiTask.apply(grunt.task, parseArgs(name, info, fn));
   };
 
-  return Promise;
-};
+  /**
+   * @memberOf grunt.task
+   */
+  grunt.task.registerMultiPromise = grunt.registerMultiPromise.bind(grunt.task);
+
+})(module);

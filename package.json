@@ -1,7 +1,7 @@
 {
   "name": "grunt-promise",
-  "version": "0.1.6",
-  "description": "Allows the registration and execution of promise based grunt tasks.",
+  "version": "1.0.0",
+  "description": "Create asynchronous Grunt tasks using Promises.",
   "homepage": "https://github.com/unicorn-fail/grunt-promise",
   "keywords": [
     "grunt",
@@ -30,6 +30,7 @@
       "url": "https://github.com/unicorn-fail/grunt-promise/blob/master/LICENSE"
     }
   ],
+  "tonicExampleFilename": "script/example.js",
   "engines": {
     "node": ">= 0.12.0"
   },
@@ -37,7 +38,8 @@
   "files": [
     "index.js",
     "lib",
-    "script"
+    "script",
+    "tasks"
   ],
   "scripts": {
     "postinstall": "script/post-install.js",
@@ -50,7 +52,6 @@
     "grunt": "^0.4.5",
     "grunt-contrib-jshint": "^0.11.3",
     "grunt-contrib-nodeunit": "^0.4.1",
-    "node-promise": "^0.5.12",
     "nodeunit": "^0.9.1",
     "promise": "^7.1.1",
     "q": "^1.4.1"

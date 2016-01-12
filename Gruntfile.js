@@ -10,7 +10,7 @@ module.exports = function (grunt) {
 
   // Load this module (grunt-promise) and retrieve the current promise object.
   // -----------------------------------------------------------------------
-  var Promise = require('./index.js')(grunt);
+  var Promise = require('./index.js').load();
 
   // Grunt initialization.
   // -----------------------------------------------------------------------
@@ -82,7 +82,7 @@ module.exports = function (grunt) {
       .then(multiply)                         // Expected value: 5000
       .then(multiply)                         // Expected value: 50000
       .then(function (value) {
-        grunt.log.writeln('Result:', value);  // Result: 50000
+        grunt.log.writeln('Result (' + Promise.gruntPromiseLibraryName + '):', value);  // Result: 50000
       })
     ;
   });
