@@ -154,4 +154,4 @@ module.exports = function (grunt) {
 
 ## Copyright and license
 
-Code and documentation Copyright 2016 Mark Carver. Released under [the MIT license](https://github.com/unicorn-fail/grunt-promise/blob/master/LICENSE-MIT).
+Code and documentation Copyright 2016 Mark Carver. Released under [the MIT license](https://github.com/unicorn-fail/grunt-promise/blob/master/LICENSE).
