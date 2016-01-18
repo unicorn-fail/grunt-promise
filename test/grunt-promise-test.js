@@ -1,70 +1,75 @@
-'use strict';
+(function () {
+  'use strict';
 
-var eol = require('os').EOL;
-var grunt = require('grunt');
+  var eol = require('os').EOL;
+  var grunt = require('grunt');
 
-// Project's internal promise object (for testing).
-var libraries = require('../lib/libraries');
+  // Project's internal promise object (for testing).
+  var libraries = require('../lib/libraries');
 
-// This test's Promise library (bluebird).
-var Promise = libraries.load('bluebird');
+  // This test's Promise library (bluebird).
+  var Promise = libraries.load('bluebird');
 
-// Custom asserts.
-var assert = require('nodeunit').assert;
-assert.printed = function (result, expected, message) {
-  return assert.ok(result.stdout.indexOf(expected) !== -1, message);
-};
+  // Custom asserts.
+  var assert = require('nodeunit').assert;
+  assert.printed = function (result, expected, message) {
+    return assert.ok(result.stdout.indexOf(expected) !== -1, message);
+  };
 
-// Returns a promise for spawning a grunt task.
-var runTask = function (args) {
-  return new Promise(function (resolve, reject) {
-    grunt.util.spawn({
-      grunt: true,
-      args: args,
-      fallback: ''
-    }, function (e, result) {
-      if (result.code !== 0) return reject(result.stderr);
-      resolve(result);
+  // Returns a promise for spawning a grunt task.
+  var runTask = function (args) {
+    return new Promise(function (resolve, reject) {
+      grunt.util.spawn({
+        grunt: true,
+        args: args,
+        fallback: ''
+      }, function (e, result) {
+        if (result.code !== 0) {
+          return reject(result.stderr);
+        }
+        resolve(result);
+      });
     });
-  });
-};
+  };
 
-// The tests.
-var tests = {};
+  // The tests.
+  var tests = {};
 
-// Test each supported Promise node module (plus "native").
-var modules = [].concat(libraries.supportedModules, 'native');
-modules.forEach(function (library) {
-  var chainOutput = [
-    'addition:value 1',
-    'addition:value 2',
-    'addition:value 3',
-    'addition:value 4',
-    'addition:value 5',
-    'multiplication:value 50',
-    'multiplication:value 500',
-    'multiplication:value 5000',
-    'multiplication:value 50000',
-    'Result (' + library + '): 50000'
-  ];
-  tests['Promise Chain (' + library + ')'] = function (test) {
-    test.expect(1);
-    return runTask(['test-chaining', '--no-color', '--grunt-promise-library=' + library])
-      .then(function (result) {
-        test.printed(result, chainOutput.join(eol), 'Promise Chain');
+  // Test each supported Promise node module (plus "native").
+  var modules = [].concat(libraries.supportedModules, 'native');
+  modules.forEach(function (library) {
+    var chainOutput = [
+      'addition:value 1',
+      'addition:value 2',
+      'addition:value 3',
+      'addition:value 4',
+      'addition:value 5',
+      'multiplication:value 50',
+      'multiplication:value 500',
+      'multiplication:value 5000',
+      'multiplication:value 50000',
+      'Result (' + library + '): 50000'
+    ];
+    tests['Promise Chain (' + library + ')'] = function (test) {
+      test.expect(1);
+      return runTask(['test-chaining', '--no-color', '--grunt-promise-library=' + library])
+        .then(function (result) {
+          test.printed(result, chainOutput.join(eol), 'Promise Chain');
+          test.done();
+        })
+        .catch(grunt.fail.fatal);
+    };
+    tests['Task Execution Order (' + library + ')'] = function (test) {
+      test.expect(1);
+      runTask(['test-before', 'test-chaining', 'test-after', '--no-color', '--grunt-promise-library=' + library]).then(function (result) {
+        var before = ['Running "test-before" task', 'before finished', '', 'Running "test-chaining" task'];
+        var after = ['', 'Running "test-after" task', 'after finished'];
+        test.printed(result, [].concat(before, chainOutput, after).join(eol), 'Task Execution Order');
         test.done();
-      })
-      .catch(grunt.fail.fatal);
-  };
-  tests['Task Execution Order (' + library + ')'] = function (test) {
-    test.expect(1);
-    runTask(['test-before', 'test-chaining', 'test-after', '--no-color', '--grunt-promise-library=' + library]).then(function (result) {
-      var before = ['Running "test-before" task', 'before finished', '', 'Running "test-chaining" task'];
-      var after = ['', 'Running "test-after" task', 'after finished'];
-      test.printed(result, [].concat(before, chainOutput, after).join(eol), 'Task Execution Order');
-      test.done();
-    });
-  };
-});
+      });
+    };
+  });
 
-exports["grunt-promise"] = require('nodeunit').testCase(tests);
+  exports['grunt-promise'] = require('nodeunit').testCase(tests);
+
+})();

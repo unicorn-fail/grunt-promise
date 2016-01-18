@@ -118,19 +118,20 @@ var Promise = require('grunt-promise').load();
 
 module.exports = function (grunt) {
   // Register a promised task (working example).
+  // @see https://tonicdev.com/npm/grunt-promise
   grunt.registerPromise('timeout', function () {
     return new Promise(function (resolve) {
       setTimeout(function () {
         resolve('Hello World!');
-      }, 1000); // 1 second
+      }, 1000); // 1 second.
     }).then(grunt.log.write);
   });
 
-  // Register a promised task (workflow example, non-working).
+  // Register a promised task (workflow example).
   grunt.registerPromise('my-promise', function () {
-    return somePromise()
-      .then(someAyncPromise)
-      .then(anotherAyncPromise)
+    return promiseReturningFunction()
+      .then(anotherPromise)
+      .then(yetAnotherPromise)
       .then(function (value) {
         grunt.log.writeln('Value:', value);
       })
@@ -139,8 +140,8 @@ module.exports = function (grunt) {
          // It's not entirely necessary to implement this. This plugin
          // already appends the necessary catch/then handlers to properly
          // fail or end the async task.
-      })
-    ;
+         grunt.fail.fatal(e);
+      });
   });
 }
 ```

@@ -5,7 +5,7 @@
  * Copyright (c) 2016 Mark Carver
  */
 (function (module) {
-  "use strict";
+  'use strict';
 
   var grunt = require('grunt');
 
@@ -20,7 +20,7 @@
    * @param {function} fn
    *   A task function.
    *
-   * @returns {function}
+   * @return {function}
    *   The new promise wrapped task function.
    */
   var promiseTask = function (fn) {
@@ -52,7 +52,7 @@
    *   are created. You should wrap the Promise with an anonymous task function
    *   instead.
    *
-   * @returns {Array}
+   * @return {Array}
    *   An array containing: name, info and a promised fn task.
    */
   var parseArgs = function (name, info, fn) {
@@ -83,7 +83,7 @@
    *
    * @memberOf grunt
    *
-   * @returns {object}
+   * @return {object}
    *   The task object.
    */
   grunt.registerPromise = function (name, info, fn) {
@@ -111,7 +111,7 @@
    *
    * @memberOf grunt
    *
-   * @returns {object}
+   * @return {object}
    *   The task object.
    */
   grunt.registerMultiPromise = function (name, info, fn) {

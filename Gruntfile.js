@@ -18,23 +18,23 @@ module.exports = function (grunt) {
     nodeunit: {
       all: ['test/*-test.js']
     },
-    jshint: {
+    eslint: {
       options: {
-        jshintrc: true
+        configFile: '.eslintrc'
       },
-      all: [
+      js: [
         'index.js',
         'Gruntfile.js',
-        'package.json',
         'lib/**/*.js',
-        'script/**/*.js'
+        'script/**/*.js',
+        'test/**/*.js'
       ]
     }
   });
 
   // Load NPM grunt module tasks.
   // -----------------------------------------------------------------------
-  grunt.loadNpmTasks('grunt-contrib-jshint');
+  grunt.loadNpmTasks('grunt-eslint');
   grunt.loadNpmTasks('grunt-contrib-nodeunit');
 
   // Testing tasks.
@@ -92,7 +92,7 @@ module.exports = function (grunt) {
   grunt.registerTask('test-after', grunt.log.writeln.bind(grunt.log, 'after finished'));
 
   // Register "default" and "test" tasks.
-  grunt.registerTask('test', ['jshint', 'nodeunit']);
+  grunt.registerTask('test', ['eslint', 'nodeunit']);
   grunt.registerTask('default', ['test']);
 
 };

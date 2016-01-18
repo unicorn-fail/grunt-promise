@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+
 /**
  * The post-install script for the "grunt-promise" NPM module.
  *
@@ -15,8 +16,7 @@
   // Check if an existing NPM promise library is installed.
   var installed = false;
   libraries.supportedModules.forEach(function (name) {
-    if (installed) return;
-    installed = !!libraries.load(name);
+    installed = installed || !!libraries.load(name);
   });
 
   // No NPM modules are installed, inform the user.
