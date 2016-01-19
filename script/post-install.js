@@ -8,15 +8,16 @@
  */
 (function () {
   'use strict';
-  var libraries = require('../lib/libraries');
+  var using = require('../').using;
+  var util = require('../lib/util');
 
   // Determine if there is native promise support.
-  var native = !!libraries.promises.native;
+  var native = !!util.loaded.native;
 
   // Check if an existing NPM promise library is installed.
   var installed = false;
-  libraries.supportedModules.forEach(function (name) {
-    installed = installed || !!libraries.load(name);
+  util.supportedModules.forEach(function (name) {
+    installed = installed || !!using(name);
   });
 
   // No NPM modules are installed, inform the user.
@@ -33,6 +34,6 @@
       console.error(red + 'WARNING: Node.js does not have a native Promise API; grunt-promise WILL NOT WORK');
       console.error('You will continue receiving errors until one of the following NPM packages is installed:' + reset);
     }
-    console.log(libraries.suggest());
+    console.log(util.suggest());
   }
 })();
