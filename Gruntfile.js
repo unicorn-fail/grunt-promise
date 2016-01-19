@@ -13,6 +13,11 @@
   // Grunt config initialization.
   // -----------------------------------------------------------------------
   grunt.initConfig({
+    bump: {
+      options: {
+        pushTo: 'origin'
+      }
+    },
     nodeunit: {
       all: ['test/*-test.js']
     },
@@ -32,6 +37,7 @@
 
   // Load NPM grunt module tasks.
   // -----------------------------------------------------------------------
+  grunt.loadNpmTasks('grunt-bump');
   grunt.loadNpmTasks('grunt-eslint');
   grunt.loadNpmTasks('grunt-contrib-nodeunit');
 
