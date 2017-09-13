@@ -1,6 +1,6 @@
 {
   "name": "grunt-promise",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "Create asynchronous Grunt tasks using Promises.",
   "homepage": "https://github.com/unicorn-fail/grunt-promise",
   "keywords": [
