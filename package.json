@@ -42,7 +42,7 @@
     "tasks"
   ],
   "scripts": {
-    "postinstall": "script/post-install.js",
+    "postinstall": "node script/post-install.js",
     "test": "grunt test"
   },
   "dependencies": {},
