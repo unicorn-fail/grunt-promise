@@ -164,11 +164,11 @@ grunt.registerPromise('my-promise', function () {
 
 ## Creator
 
-**Mark Carver**
+**Mark Halliwell**
 
-* <https://twitter.com/mark_carver>
-* <https://github.com/markcarver>
+* <https://twitter.com/markehalliwell>
+* <https://github.com/markhalliwell>
 
 ## Copyright and license
 
-Code and documentation Copyright 2016 Mark Carver. Released under [the MIT license](https://github.com/unicorn-fail/grunt-promise/blob/master/LICENSE).
+Code and documentation Copyright 2016 Mark Halliwell. Released under [the MIT license](LICENSE).

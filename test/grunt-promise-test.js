@@ -2,7 +2,7 @@
  * Tests for the "grunt-promise" NPM module.
  *
  * The MIT License (MIT)
- * Copyright (c) 2016 Mark Carver
+ * Copyright (c) 2016 Mark Halliwell
  */
 (function () {
   'use strict';
